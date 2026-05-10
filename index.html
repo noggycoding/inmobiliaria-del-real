@@ -9,7 +9,7 @@
         content="Especialistas en renta, venta y compra de casas, locales y terrenos en Mexicali, B.C.">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="styles.css?v=8">
+    <link rel="stylesheet" href="styles.css?v=9">
 
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -77,44 +77,53 @@
     <section id="nosotros" class="about section-padding">
         <div class="container">
             <div class="about-grid">
-                <div class="about-image fade-in-up">
-                    <img src="https://images.unsplash.com/photo-1573497620053-ea5300f94f21?ixlib=rb-4.0.3&auto=format&fit=crop&w=1073&q=80"
-                        alt="Asesora inmobiliaria Claudia Del Real, Mexicali B.C.">
-                    <div class="about-experience">
-                        <h3>5.0 ★</h3>
-                        <p>CALIFICACIÓN GOOGLE</p>
+                <!-- Left: Diamond Collage -->
+                <div class="diamond-collage fade-in-up">
+                    <div class="diamond-grid">
+                        <div class="diamond-item top-diamond">
+                            <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Propiedad Premium">
+                        </div>
+                        <div class="diamond-item right-diamond">
+                            <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Interior Casa">
+                        </div>
+                        <div class="diamond-item left-diamond">
+                            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Fachada Moderna">
+                        </div>
+                        <div class="diamond-item bottom-diamond">
+                            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Residencia de Lujo">
+                        </div>
                     </div>
                 </div>
 
-                <div class="about-content fade-in-up">
-                    <div class="about-header">
-                        <h2 class="section-title serif-title">Conoce a <span class="text-gold">Del Real</span></h2>
-                        <div class="gold-line"></div>
-                    </div>
-                    
-                    <p class="about-text">Somos una agencia inmobiliaria con presencia consolidada en Mexicali, B.C. Claudia Del Real y su equipo te acompañan con honestidad y experiencia desde el primer contacto hasta las llaves en tu mano.</p>
-                    <p class="about-text">Hablamos claro, conocemos el mercado local y respondemos rápido — eso es lo que nuestros clientes valoran.</p>
+                <!-- Right: Content Card -->
+                <div class="about-card-container fade-in-up" style="transition-delay: 0.1s;">
+                    <div class="about-content-card">
+                        <span class="subtitle-gold" style="margin-bottom: 0.5rem; display: block; font-size: 0.8rem;">SOBRE NOSOTROS</span>
+                        <h2 class="section-title serif-title" style="font-size: 2.8rem; margin-bottom: 1rem; text-align: left; left: 0; transform: none;">
+                            Conoce a <span class="text-gold">Del Real</span>
+                        </h2>
+                        
+                        <p class="about-text" style="color: rgba(255,255,255,0.7); font-size: 1rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                            Somos una agencia inmobiliaria con presencia consolidada en Mexicali, B.C. Claudia Del Real y su equipo te acompañan con honestidad y experiencia desde el primer contacto hasta las llaves en tu mano. Hablamos claro, conocemos el mercado local y respondemos rápido.
+                        </p>
+                        
+                        <ul class="about-checklist">
+                            <li><i class="fa-solid fa-check text-gold"></i> Respuesta rápida en menos de 24h</li>
+                            <li><i class="fa-solid fa-check text-gold"></i> Sin letras pequeñas en contratos</li>
+                            <li><i class="fa-solid fa-check text-gold"></i> Conocimiento profundo de Mexicali</li>
+                            <li><i class="fa-solid fa-check text-gold"></i> Trato directo y honesto</li>
+                        </ul>
 
-                    <div class="about-features-grid">
-                        <div class="feat-box border-bottom border-right">
-                            <i class="fa-regular fa-clock"></i>
-                            <span>Respuesta en<br>menos de 24 h</span>
+                        <div class="about-author-box">
+                            <img src="https://images.unsplash.com/photo-1573497620053-ea5300f94f21?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Claudia Del Real">
+                            <div class="author-info">
+                                <h4 class="author-name serif-title" style="font-size: 1.1rem; margin-bottom: 2px;">Claudia Del Real</h4>
+                                <span class="author-label" style="font-size: 0.7rem;">ASESORA INMOBILIARIA</span>
+                            </div>
                         </div>
-                        <div class="feat-box border-bottom">
-                            <i class="fa-regular fa-file-lines"></i>
-                            <span>Sin letras pequeñas<br>en contratos</span>
-                        </div>
-                        <div class="feat-box border-right">
-                            <i class="fa-solid fa-location-dot"></i>
-                            <span>Conocimiento<br>profundo de Mexicali</span>
-                        </div>
-                        <div class="feat-box">
-                            <i class="fa-regular fa-user"></i>
-                            <span>Trato directo con<br>la asesora</span>
-                        </div>
-                    </div>
 
-                    <a href="#contacto" class="btn btn-full">HABLAR CON CLAUDIA</a>
+                        <a href="#contacto" class="btn btn-gold btn-about-cta">HABLAR CON CLAUDIA</a>
+                    </div>
                 </div>
             </div>
         </div>

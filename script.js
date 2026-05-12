@@ -1,4 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Intro Screen Logic
+    const introScreen = document.getElementById('intro-screen');
+    if (introScreen) {
+        // Prevent scrolling while intro is active
+        document.body.style.overflow = 'hidden';
+        
+        setTimeout(() => {
+            introScreen.classList.add('hidden');
+            // Re-enable scrolling
+            document.body.style.overflow = '';
+            
+            // Remove from DOM after transition completes to clean up
+            setTimeout(() => {
+                introScreen.remove();
+            }, 800);
+        }, 2800); // 2.8 seconds before starting to hide
+    }
+
     // Mobile Menu Toggle
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const navLinks = document.getElementById('nav-links');

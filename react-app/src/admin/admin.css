@@ -1028,3 +1028,59 @@ body.admin-hide-highlights .svc-card-img-edit {
   opacity: 0.9;
   transform: translateY(-1px);
 }
+
+.admin-login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.admin-login-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.55);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.admin-login-label i {
+  color: var(--color-gold-base);
+  font-size: 0.7rem;
+}
+
+.admin-login-error-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.7rem 1rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: #ef4444;
+  width: 100%;
+}
+
+.admin-login-footer {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 0.3rem;
+}
+
+.admin-login-footer i {
+  color: rgba(217, 176, 71, 0.5);
+  font-size: 0.68rem;
+}
+
+/* Fix input text alignment for email/password (not centered) */
+.admin-login-field .admin-login-input {
+  text-align: left;
+  letter-spacing: 0;
+}

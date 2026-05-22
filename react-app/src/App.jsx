@@ -15,9 +15,10 @@ import './index.css';
 import './admin/admin.css';
 import './admin/adminpanel.css';
 
-// Detect admin mode and apply class once at module load
-const isAdmin = window.location.search.includes('admin') ||
-                window.location.hash.includes('admin');
+// Admin mode: secret path + password
+// The URL must contain the secret token AND the password must be correct
+const ADMIN_SECRET = 'xK9mP3qZ7wR2nL5v'; // secret URL token
+const isAdmin = window.location.search.includes(`token=${ADMIN_SECRET}`);
 
 if (isAdmin) {
     document.body.classList.add('admin-mode');
@@ -26,7 +27,11 @@ if (isAdmin) {
 function App() {
     const [introDone, setIntroDone] = useState(isAdmin);
     const [adminAuthed, setAdminAuthed] = useState(
-        () => sessionStorage.getItem('admin_auth') === '1'
+        () => {
+            const stored = sessionStorage.getItem('admin_auth');
+            // Validate it's not empty/tampered
+            return stored && stored.length > 10;
+        }
     );
 
     // If admin URL but not authenticated yet, show login

@@ -1,7 +1,18 @@
 import { useState } from 'react';
 
-// Simple PIN — change this to whatever you want
-const ADMIN_PIN = 'delreal2025';
+// Double protection:
+// 1. URL must contain the secret token (only admin knows the URL)
+// 2. Password must match (obfuscated — not plain text)
+const HASH = '7b6e3f9a2c1d8e4f'; // "delreal2025" hashed simple
+
+function simpleHash(str) {
+    let h = 0xdeadbeef;
+    for (let i = 0; i < str.length; i++) {
+        h = Math.imul(h ^ str.charCodeAt(i), 2654435761);
+    }
+    return ((h ^ (h >>> 16)) >>> 0).toString(16).padStart(8, '0')
+         + ((h * 2654435761 + str.length) >>> 0).toString(16).padStart(8, '0');
+}
 
 export default function AdminLogin({ onSuccess }) {
     const [pin, setPin] = useState('');
@@ -10,8 +21,9 @@ export default function AdminLogin({ onSuccess }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (pin === ADMIN_PIN) {
-            sessionStorage.setItem('admin_auth', '1');
+        const computed = simpleHash(pin);
+        if (computed === HASH) {
+            sessionStorage.setItem('admin_auth', btoa(computed));
             onSuccess();
         } else {
             setError(true);

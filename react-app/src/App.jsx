@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AdminProvider } from './context/AdminContext';
 import AdminToolbar from './admin/AdminToolbar';
+import AdminLogin from './admin/AdminLogin';
 import EditorModal from './admin/EditorModal';
 import IntroScreen from './components/IntroScreen';
 import Navbar from './components/Navbar';
@@ -24,6 +25,14 @@ if (isAdmin) {
 
 function App() {
     const [introDone, setIntroDone] = useState(isAdmin);
+    const [adminAuthed, setAdminAuthed] = useState(
+        () => sessionStorage.getItem('admin_auth') === '1'
+    );
+
+    // If admin URL but not authenticated yet, show login
+    if (isAdmin && !adminAuthed) {
+        return <AdminLogin onSuccess={() => setAdminAuthed(true)} />;
+    }
 
     return (
         <AdminProvider isAdmin={isAdmin}>

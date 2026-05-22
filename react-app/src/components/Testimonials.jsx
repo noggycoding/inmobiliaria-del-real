@@ -1,129 +1,148 @@
 import { motion } from 'framer-motion';
+import { useAdmin } from '../context/AdminContext';
+import EditableText from '../admin/EditableText';
+import EditableImage from '../admin/EditableImage';
 
-const leftContentVariants = {
-    hidden: { opacity: 0, x: -50, filter: 'blur(5px)' },
-    visible: { 
-        opacity: 1, 
-        x: 0, 
-        filter: 'blur(0px)',
-        transition: { duration: 0.8, ease: "easeOut" } 
-    }
+const leftVariants = {
+    hidden: { opacity: 0, x: -40 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } },
 };
 
-const rightContentVariants = {
-    hidden: { opacity: 0, x: 50, filter: 'blur(5px)' },
-    visible: { 
-        opacity: 1, 
-        x: 0, 
-        filter: 'blur(0px)',
-        transition: { duration: 0.8, ease: "easeOut", delay: 0.2 } 
-    }
+const cardStagger = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.2, delayChildren: 0.1 } },
 };
+
+const cardSlide = {
+    hidden: { opacity: 0, x: 80, scale: 0.95 },
+    visible: { opacity: 1, x: 0, scale: 1, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
+};
+
+const statFloat = (delay) => ({
+    y: [0, -5, 0, 4, 0],
+    transition: { duration: 5 + delay, repeat: Infinity, ease: 'easeInOut' },
+});
+
+function StarRating({ rating }) {
+    return (
+        <div className="testi-card-rating">
+            {Array.from({ length: 5 }).map((_, i) => (
+                <i key={i} className={`fa-solid fa-star ${i < Math.floor(rating) ? 'filled' : ''}`} />
+            ))}
+            <span className="testi-card-rating-num">{rating.toFixed(1)}</span>
+        </div>
+    );
+}
 
 export default function Testimonials({ introDone }) {
+    const { content } = useAdmin();
+    const t = content.testimonials;
+
     return (
-        <section id="testimonios" className="testimonials section-padding">
+        <section id="testimonios" className="testimonials">
             <div className="container">
-                <div className="testi-split-container">
-                    {/* Left Sticky Column */}
-                    <motion.div 
-                        className="testi-left sticky-column"
-                        variants={leftContentVariants}
+                <motion.div
+                    className="testi-header"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={introDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                    viewport={{ once: false, amount: 0.4 }}
+                    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                >
+                    <span className="eyebrow-line">
+                        <EditableText path="testimonials.eyebrow" tag="span" />
+                    </span>
+                    <h2 className="testi-main-title">
+                        <EditableText path="testimonials.titleStart" tag="span" />{' '}
+                        <EditableText path="testimonials.titleEm" tag="em" />
+                    </h2>
+                    <EditableText path="testimonials.subtitle" tag="p" className="section-subtitle" />
+                </motion.div>
+
+                <div className="testi-layout">
+                    {/* Left column */}
+                    <motion.div
+                        className="testi-left"
+                        variants={leftVariants}
                         initial="hidden"
-                        whileInView={introDone ? "visible" : "hidden"}
+                        whileInView={introDone ? 'visible' : 'hidden'}
                         viewport={{ once: false, amount: 0.3 }}
                     >
-                        <div className="testi-stars">
-                            <i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i>
-                        </div>
-                        <h2 className="testi-title serif-title">Lo que dicen <br /><span className="text-gold underline-gold">Nuestros Clientes</span></h2>
-                        <p className="testi-subtitle">La satisfacción de nuestros clientes es nuestra mejor carta de presentación. Construimos relaciones basadas en confianza, honestidad y resultados.</p>
-                        
                         <div className="testi-stats">
-                            <div className="stat-box">
-                                <h4 className="serif-title text-gold">100+</h4>
-                                <p>Clientes felices</p>
-                            </div>
-                            <div className="stat-box">
-                                <h4 className="serif-title text-gold">10+</h4>
-                                <p>Años de experiencia</p>
-                            </div>
-                            <div className="stat-box">
-                                <h4 className="serif-title text-gold">5.0</h4>
-                                <p>Calificación Google</p>
+                            {t.stats.map((s, i) => (
+                                <motion.div
+                                    key={s.lbl}
+                                    className="testi-stat-card"
+                                    animate={{ y: statFloat(i * 0.8).y }}
+                                    transition={statFloat(i * 0.8).transition}
+                                >
+                                    <div className="testi-stat-icon"><i className={`fa-solid ${s.icon}`} /></div>
+                                    <div className="testi-stat-content">
+                                        <EditableText path={`testimonials.stats.${i}.val`} tag="h4" />
+                                        <EditableText path={`testimonials.stats.${i}.lbl`} tag="p" />
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        <div className="testi-google-badge">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/120px-Google_%22G%22_logo.svg.png" alt="Google" className="testi-google-logo" />
+                            <div>
+                                <div className="testi-google-stars">
+                                    <i className="fa-solid fa-star" /><i className="fa-solid fa-star" /><i className="fa-solid fa-star" /><i className="fa-solid fa-star" /><i className="fa-solid fa-star" />
+                                </div>
+                                <span>Calificación perfecta en Google Maps</span>
                             </div>
                         </div>
 
                         <div className="testi-actions">
-                            <a href="#contacto" className="btn btn-outline">VER MÁS RESEÑAS</a>
-                            <a href="#contacto" className="btn btn-gold">CONTÁCTANOS</a>
+                            <a href="#contacto" className="btn btn-gold">Contáctanos <i className="fa-solid fa-arrow-right btn-arrow" /></a>
+                            <a href="#" className="btn btn-outline">Ver en Google <i className="fa-solid fa-external-link" /></a>
                         </div>
                     </motion.div>
 
-                    {/* Right Scrolling/Stacking Column */}
-                    <motion.div 
-                        className="testi-right stack-column"
-                        variants={rightContentVariants}
+                    {/* Right: Cards sliding in */}
+                    <motion.div
+                        className="testi-cards"
+                        variants={cardStagger}
                         initial="hidden"
-                        whileInView={introDone ? "visible" : "hidden"}
-                        viewport={{ once: false, amount: 0.2 }}
+                        whileInView={introDone ? 'visible' : 'hidden'}
+                        viewport={{ once: true, amount: 0.15 }}
                     >
-                        {/* Review 1 */}
-                        <motion.div whileHover={{ scale: 1.02 }} className="testimonial-card sticky-card" style={{ top: '100px' }}>
-                            <div className="card-top">
-                                <div className="stars">
-                                    <i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i>
+                        {t.items.map((item, i) => (
+                            <motion.article
+                                key={item.id}
+                                className="testi-card"
+                                variants={cardSlide}
+                                whileHover={{ y: -4, scale: 1.01 }}
+                                transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+                            >
+                                <div className="testi-card-top">
+                                    <StarRating rating={item.rating} />
+                                    <span className="testi-card-date">
+                                        <i className="fa-regular fa-calendar" />
+                                        <EditableText path={`testimonials.items.${i}.date`} tag="span" />
+                                    </span>
                                 </div>
-                                <i className="fa-solid fa-quote-right quote-icon"></i>
-                            </div>
-                            <p className="testimonial-text">"Excelente lugar para comprar tu casa, muy amables y siempre son claros y muy profesionales. La atención de Claudia fue excepcional en todo el proceso."</p>
-                            <div className="testimonial-line"></div>
-                            <div className="testimonial-author-box">
-                                <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Rosa Pérez" />
-                                <div className="author-info">
-                                    <h4 className="author-name serif-title">Rosa Pérez</h4>
-                                    <span className="author-label">CLIENTE SATISFECHA</span>
-                                </div>
-                            </div>
-                        </motion.div>
 
-                        {/* Review 2 */}
-                        <motion.div whileHover={{ scale: 1.02 }} className="testimonial-card sticky-card" style={{ top: '130px' }}>
-                            <div className="card-top">
-                                <div className="stars">
-                                    <i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i>
-                                </div>
-                                <i className="fa-solid fa-quote-right quote-icon"></i>
-                            </div>
-                            <p className="testimonial-text">"Muy bonito lugar. Me atendieron de buena manera al pedir informes de renta de departamentos. Definitivamente la mejor opción en Mexicali."</p>
-                            <div className="testimonial-line"></div>
-                            <div className="testimonial-author-box">
-                                <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Christopher Rincón" />
-                                <div className="author-info">
-                                    <h4 className="author-name serif-title">Christopher Rincón</h4>
-                                    <span className="author-label">CLIENTE SATISFECHO</span>
-                                </div>
-                            </div>
-                        </motion.div>
+                                <blockquote className="testi-card-quote">
+                                    <i className="fa-solid fa-quote-left testi-card-quote-icon" />
+                                    <EditableText path={`testimonials.items.${i}.text`} tag="span" />
+                                </blockquote>
 
-                        {/* Review 3 */}
-                        <motion.div whileHover={{ scale: 1.02 }} className="testimonial-card sticky-card" style={{ top: '160px' }}>
-                            <div className="card-top">
-                                <div className="stars">
-                                    <i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i>
+                                <div className="testi-card-bottom">
+                                    <div className="testi-card-author">
+                                        <EditableImage path={`testimonials.items.${i}.img`} alt={item.author} />
+                                        <div>
+                                            <EditableText path={`testimonials.items.${i}.author`} tag="h4" />
+                                            <EditableText path={`testimonials.items.${i}.label`} tag="span" />
+                                        </div>
+                                    </div>
+                                    <div className="testi-card-verified">
+                                        <i className="fa-solid fa-circle-check" /> Verificado
+                                    </div>
                                 </div>
-                                <i className="fa-solid fa-quote-right quote-icon"></i>
-                            </div>
-                            <p className="testimonial-text">"¡Me encanta! 100% recomendado. El trato es directo, sin letras pequeñas y siempre están disponibles para resolver cualquier duda que tengas durante el trámite."</p>
-                            <div className="testimonial-line"></div>
-                            <div className="testimonial-author-box">
-                                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Fer Miauuu" />
-                                <div className="author-info">
-                                    <h4 className="author-name serif-title">Fer Miauuu</h4>
-                                    <span className="author-label">CLIENTE SATISFECHA</span>
-                                </div>
-                            </div>
-                        </motion.div>
+                            </motion.article>
+                        ))}
                     </motion.div>
                 </div>
             </div>

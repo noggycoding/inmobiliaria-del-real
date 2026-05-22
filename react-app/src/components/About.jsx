@@ -1,94 +1,132 @@
 import { motion } from 'framer-motion';
+import { useAdmin } from '../context/AdminContext';
+import EditableText from '../admin/EditableText';
+import EditableImage from '../admin/EditableImage';
 
-const fadeUpVariant = {
-    hidden: { opacity: 0, y: 50, filter: 'blur(5px)' },
-    visible: { 
-        opacity: 1, 
-        y: 0, 
-        filter: 'blur(0px)',
-        transition: { duration: 0.8, ease: "easeOut" } 
-    }
+const slideLeft = {
+    hidden: { opacity: 0, x: -50, rotate: -2 },
+    visible: { opacity: 1, x: 0, rotate: 0, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } },
 };
 
-const slideRightVariant = {
-    hidden: { opacity: 0, x: -50, filter: 'blur(5px)' },
-    visible: { 
-        opacity: 1, 
-        x: 0, 
-        filter: 'blur(0px)',
-        transition: { duration: 0.8, ease: "easeOut" } 
-    }
+const slideRight = {
+    hidden: { opacity: 0, x: 50 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } },
 };
+
+const checklistStagger = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.1, delayChildren: 0.3 } },
+};
+
+const checklistItem = {
+    hidden: { opacity: 0, x: -20 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+};
+
+const floatVariants = [
+    {
+        animate: { y: [0, -5, 0, 4, 0], x: [0, 3, 0, -3, 0], rotate: [0, 0.8, 0, -0.5, 0], scale: [1, 1.04, 1, 0.98, 1] },
+        transition: { duration: 8, repeat: Infinity, ease: 'easeInOut' },
+    },
+    {
+        animate: { y: [0, 4, 0, -5, 0], x: [0, -3, 0, 2, 0], rotate: [0, -0.6, 0, 0.7, 0], scale: [1, 0.97, 1, 1.05, 1] },
+        transition: { duration: 9, repeat: Infinity, ease: 'easeInOut' },
+    },
+    {
+        animate: { y: [0, -3, 0, 6, 0], x: [0, 2, 0, -4, 0], rotate: [0, 0.5, 0, -0.8, 0], scale: [1, 1.03, 1, 0.97, 1] },
+        transition: { duration: 10, repeat: Infinity, ease: 'easeInOut' },
+    },
+    {
+        animate: { y: [0, 5, 0, -4, 0], x: [0, -2, 0, 3, 0], rotate: [0, -0.7, 0, 0.6, 0], scale: [1, 0.96, 1, 1.04, 1] },
+        transition: { duration: 8.5, repeat: Infinity, ease: 'easeInOut' },
+    },
+];
 
 export default function About({ introDone }) {
+    const { content } = useAdmin();
+    const a = content.about;
+
     return (
-        <section id="nosotros" className="about section-padding">
+        <section id="nosotros" className="about">
             <div className="container">
                 <div className="about-grid">
-                    {/* Left: Diamond Collage */}
-                    <motion.div 
+                    {/* Diamond collage with floating animation */}
+                    <motion.div
                         className="diamond-collage"
-                        variants={slideRightVariant}
+                        variants={slideLeft}
                         initial="hidden"
-                        whileInView={introDone ? "visible" : "hidden"}
-                        viewport={{ once: false, amount: 0.3 }}
+                        whileInView={introDone ? 'visible' : 'hidden'}
+                        viewport={{ once: false, amount: 0.2 }}
                     >
                         <div className="diamond-grid">
-                            <motion.div whileHover={{ scale: 1.05 }} className="diamond-item top-diamond">
-                                <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Propiedad Premium" />
-                            </motion.div>
-                            <motion.div whileHover={{ scale: 1.05 }} className="diamond-item right-diamond">
-                                <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Interior Casa" />
-                            </motion.div>
-                            <motion.div whileHover={{ scale: 1.05 }} className="diamond-item left-diamond">
-                                <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Fachada Moderna" />
-                            </motion.div>
-                            <motion.div whileHover={{ scale: 1.05 }} className="diamond-item bottom-diamond">
-                                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Residencia de Lujo" />
-                            </motion.div>
+                            {a.images.map((_, i) => (
+                                <motion.div
+                                    key={i}
+                                    className="diamond-item"
+                                    animate={floatVariants[i].animate}
+                                    transition={floatVariants[i].transition}
+                                >
+                                    <EditableImage path={`about.images.${i}`} alt={`Propiedad ${i + 1}`} />
+                                </motion.div>
+                            ))}
                         </div>
                     </motion.div>
 
-                    {/* Right: Content Card */}
-                    <motion.div 
-                        className="about-card-container"
-                        variants={fadeUpVariant}
+                    {/* Content card */}
+                    <motion.div
+                        variants={slideRight}
                         initial="hidden"
-                        whileInView={introDone ? "visible" : "hidden"}
-                        viewport={{ once: false, amount: 0.3 }}
+                        whileInView={introDone ? 'visible' : 'hidden'}
+                        viewport={{ once: false, amount: 0.2 }}
                     >
                         <div className="about-content-card">
-                            <span className="subtitle-gold" style={{ marginBottom: '0.5rem', display: 'block', fontSize: '0.8rem' }}>SOBRE NOSOTROS</span>
-                            <h2 className="section-title serif-title" style={{ fontSize: '2.8rem', marginBottom: '1rem', textAlign: 'left', left: 0, transform: 'none' }}>
-                                Conoce a <span className="text-gold">Del Real</span>
+                            <EditableText path="about.eyebrow" tag="span" className="eyebrow" />
+
+                            <h2 className="about-title">
+                                <EditableText path="about.titleStart" tag="span" />{' '}
+                                <EditableText path="about.titleEm" tag="em" />
                             </h2>
-                            
-                            <p className="about-text" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
-                                Somos una agencia inmobiliaria con presencia consolidada en Mexicali, B.C. Claudia Del Real y su equipo te acompañan con honestidad y experiencia desde el primer contacto hasta las llaves en tu mano. Hablamos claro, conocemos el mercado local y respondemos rápido.
-                            </p>
-                            
-                            <ul className="about-checklist">
-                                <li><i className="fa-solid fa-check text-gold"></i> Respuesta rápida en menos de 24h</li>
-                                <li><i className="fa-solid fa-check text-gold"></i> Sin letras pequeñas en contratos</li>
-                                <li><i className="fa-solid fa-check text-gold"></i> Conocimiento profundo de Mexicali</li>
-                                <li><i className="fa-solid fa-check text-gold"></i> Trato directo y honesto</li>
-                            </ul>
 
-                            <div className="about-author-box">
-                                <img src="https://images.unsplash.com/photo-1573497620053-ea5300f94f21?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Claudia Del Real" />
-                                <div className="author-info">
-                                    <h4 className="author-name serif-title" style={{ fontSize: '1.1rem', marginBottom: '2px' }}>Claudia Del Real</h4>
-                                    <span className="author-label" style={{ fontSize: '0.7rem' }}>ASESORA INMOBILIARIA</span>
-                                </div>
-                            </div>
+                            <EditableText path="about.description" tag="p" className="about-text" />
 
-                            <motion.a 
-                                whileHover={{ scale: 1.05 }} 
-                                whileTap={{ scale: 0.95 }} 
-                                href="#contacto" 
-                                className="btn btn-gold btn-about-cta"
+                            <motion.ul
+                                className="about-checklist"
+                                variants={checklistStagger}
+                                initial="hidden"
+                                whileInView="visible"
+                                viewport={{ once: false, amount: 0.3 }}
                             >
-                                HABLAR CON CLAUDIA
+                                {a.checklist.map((item, i) => (
+                                    <motion.li key={i} variants={checklistItem}>
+                                        <i className="fa-solid fa-check" />
+                                        <EditableText path={`about.checklist.${i}`} tag="span" />
+                                    </motion.li>
+                                ))}
+                            </motion.ul>
+
+                            <motion.div
+                                className="about-author-box"
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: false }}
+                                transition={{ duration: 0.5, delay: 0.5 }}
+                            >
+                                <EditableImage path="about.authorImg" alt={a.authorName} className="about-author-img" />
+                                <div className="author-info">
+                                    <EditableText path="about.authorName" tag="h4" className="author-name" />
+                                    <EditableText path="about.authorLabel" tag="span" className="author-label" />
+                                </div>
+                            </motion.div>
+
+                            <motion.a
+                                whileHover={{ scale: 1.05, y: -3 }}
+                                whileTap={{ scale: 0.96 }}
+                                href="#contacto"
+                                className="btn btn-gold"
+                                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                            >
+                                <EditableText path="about.cta" tag="span" />
+                                <i className="fa-solid fa-arrow-right btn-arrow" />
                             </motion.a>
                         </div>
                     </motion.div>

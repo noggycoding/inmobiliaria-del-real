@@ -1,180 +1,248 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import { useAdmin } from '../context/AdminContext';
+import EditableText from '../admin/EditableText';
 
-const services = [
-    {
-        id: 1,
-        title: "Renta de Casas",
-        desc: "Encuentra el hogar perfecto para ti y tu familia con nuestras excelentes opciones de arrendamiento en Mexicali.",
-        icon: "fa-house-user",
-        bgImg: "img-svc-casas.png",
-        gradient: "rgba(5,33,59,0.10) 0%, rgba(0,20,40,0.88) 100%",
-        bgPos: "center top"
-    },
-    {
-        id: 2,
-        title: "Venta de Casas",
-        desc: "Te acompañamos en todo el proceso de venta garantizando un trato justo, seguro y al mejor precio del mercado.",
-        icon: "fa-house-flag",
-        bgImg: "img-svc-casas.png",
-        gradient: "rgba(30,15,0,0.10) 0%, rgba(30,15,0,0.88) 100%",
-        bgPos: "center bottom"
-    },
-    {
-        id: 3,
-        title: "Departamentos",
-        desc: "Opciones modernas y céntricas para quienes buscan practicidad, seguridad y comodidad en la ciudad.",
-        icon: "fa-building",
-        bgImg: "img-svc-departamentos.jpg",
-        gradient: "rgba(5,33,59,0.10) 0%, rgba(0,25,50,0.88) 100%",
-        bgPos: "center"
-    },
-    {
-        id: 4,
-        title: "Locales Comerciales",
-        desc: "Los mejores espacios ubicados estratégicamente para el éxito y crecimiento de tu negocio en Mexicali.",
-        icon: "fa-shop",
-        bgImg: "img-svc-comercial.png",
-        gradient: "rgba(20,5,40,0.10) 0%, rgba(20,5,40,0.88) 100%",
-        bgPos: "center"
-    },
-    {
-        id: 5,
-        title: "Terrenos",
-        desc: "Excelentes oportunidades de inversión en terrenos residenciales y comerciales con alta plusvalía en Baja California.",
-        icon: "fa-map",
-        bgImg: "img-svc-terrenos.jpg",
-        gradient: "rgba(5,40,25,0.10) 0%, rgba(5,40,25,0.88) 100%",
-        bgPos: "center"
-    },
-    {
-        id: 6,
-        title: "Asesoría Legal",
-        desc: "Orientación experta en contratos, escrituras y trámites para brindarte total seguridad jurídica en cada operación.",
-        icon: "fa-scale-balanced",
-        bgImg: "img-svc-terrenos.jpg",
-        gradient: "rgba(40,25,0,0.10) 0%, rgba(40,25,0,0.88) 100%",
-        bgPos: "right center"
-    }
-];
+const SLIDE_DURATION = 7000;
+const TRANSITION_DURATION = 800;
 
-const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: { staggerChildren: 0.15 }
-    }
-};
-
-const cardVariants = {
-    hidden: { opacity: 0, y: 50, scale: 0.95 },
-    visible: { 
-        opacity: 1, 
-        y: 0, 
-        scale: 1,
-        transition: { duration: 0.6, ease: "easeOut" } 
-    }
-};
+const stepPulse = { scale: [1, 1.06, 1], opacity: [0.9, 1, 0.9] };
 
 export default function Services({ introDone }) {
-    const trackRef = useRef(null);
-    const [idx, setIdx] = useState(0);
-    const [visibleCards, setVisibleCards] = useState(3);
-    const [cardWidth, setCardWidth] = useState(0);
+    const { content, isAdmin, openEditor } = useAdmin();
+    const s = content.services;
+    const slides = s.items;
 
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isTransitioning, setIsTransitioning] = useState(false);
+    const [progress, setProgress] = useState(0);
+    const [isPaused, setIsPaused] = useState(false);
+
+    const intervalRef = useRef(null);
+    const progressRef = useRef(null);
+    const touchStartX = useRef(0);
+    const touchEndX = useRef(0);
+
+    const goToSlide = useCallback(
+        (index) => {
+            if (isTransitioning || index === currentIndex) return;
+            setIsTransitioning(true);
+            setProgress(0);
+            setTimeout(() => {
+                setCurrentIndex(index);
+                setTimeout(() => setIsTransitioning(false), 50);
+            }, TRANSITION_DURATION / 2);
+        },
+        [isTransitioning, currentIndex]
+    );
+
+    const goNext = useCallback(() => {
+        const nextIndex = (currentIndex + 1) % slides.length;
+        goToSlide(nextIndex);
+    }, [currentIndex, slides.length, goToSlide]);
+
+    const goPrev = useCallback(() => {
+        const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+        goToSlide(prevIndex);
+    }, [currentIndex, slides.length, goToSlide]);
+
+    // Auto-advance + progress
     useEffect(() => {
-        const handleResize = () => {
-            if (window.innerWidth <= 600) setVisibleCards(1);
-            else if (window.innerWidth <= 992) setVisibleCards(2);
-            else setVisibleCards(3);
-
-            if (trackRef.current) {
-                const card = trackRef.current.querySelector('.svc-card');
-                if (card) {
-                    const GAP = 19; // 1.2rem
-                    setCardWidth(card.getBoundingClientRect().width + GAP);
-                }
-            }
+        if (isPaused || isAdmin) return;
+        progressRef.current = setInterval(() => {
+            setProgress((prev) => Math.min(prev + 100 / (SLIDE_DURATION / 50), 100));
+        }, 50);
+        intervalRef.current = setInterval(goNext, SLIDE_DURATION);
+        return () => {
+            clearInterval(intervalRef.current);
+            clearInterval(progressRef.current);
         };
+    }, [currentIndex, isPaused, goNext, isAdmin]);
 
-        handleResize();
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    useEffect(() => {
-        const maxIdx = Math.max(0, services.length - visibleCards);
-        if (idx > maxIdx) {
-            setIdx(maxIdx);
+    const handleTouchStart = (e) => { touchStartX.current = e.targetTouches[0].clientX; };
+    const handleTouchMove = (e) => { touchEndX.current = e.targetTouches[0].clientX; };
+    const handleTouchEnd = () => {
+        const diff = touchStartX.current - touchEndX.current;
+        if (Math.abs(diff) > 60) {
+            if (diff > 0) goNext();
+            else goPrev();
         }
-    }, [visibleCards, idx]);
+    };
 
-    const maxIdx = Math.max(0, services.length - visibleCards);
+    const currentSlide = slides[currentIndex];
+    const accent = '#E5BD58'; // gold light
 
-    const slideLeft = () => { if (idx > 0) setIdx(idx - 1); };
-    const slideRight = () => { if (idx < maxIdx) setIdx(idx + 1); };
+    const handleBgEdit = (e) => {
+        if (!isAdmin) return;
+        e.preventDefault(); e.stopPropagation();
+        openEditor(`services.items.${currentIndex}.bgImg`, 'image');
+    };
 
     return (
         <section id="servicios" className="services-section">
+            {/* Heading */}
             <div className="container">
-                <motion.div 
+                <motion.div
                     className="svc-heading"
-                    initial={{ opacity: 0, x: -30 }}
-                    whileInView={introDone ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-                    viewport={{ once: false, amount: 0.5 }}
-                    transition={{ duration: 0.6 }}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={introDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                    viewport={{ once: false, amount: 0.4 }}
+                    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                 >
-                    <div>
-                        <h2 className="svc-main-title">Nuestros <span className="text-gold" style={{ fontWeight: 800 }}>Servicios.</span></h2>
-                        <p className="svc-main-sub">Soluciones inmobiliarias integrales en Mexicali, B.C.</p>
+                    <div className="left">
+                        <EditableText path="services.eyebrow" tag="span" className="eyebrow" />
+                        <h2 className="svc-main-title">
+                            <EditableText path="services.titleStart" tag="span" />{' '}
+                            <EditableText path="services.titleEm" tag="em" />
+                        </h2>
+                        <EditableText path="services.subtitle" tag="p" className="svc-main-sub" />
                     </div>
                 </motion.div>
             </div>
 
-            <div className="svc-outer">
-                <button className="svc-arrow svc-arrow--prev" onClick={slideLeft} disabled={idx === 0} aria-label="Anterior">
-                    <i className="fa-solid fa-chevron-left"></i>
-                </button>
+            {/* Elegant Carousel */}
+            <div
+                className="carousel-wrapper"
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+            >
+                {/* Background accent wash */}
+                <div
+                    className="carousel-bg-wash"
+                    style={{ background: `radial-gradient(ellipse at 70% 50%, rgba(217, 176, 71, 0.18) 0%, transparent 70%)` }}
+                />
 
-                <div className="svc-track-wrap">
-                    <motion.div 
-                        className="svc-track" 
-                        id="svc-track" 
-                        ref={trackRef}
-                        style={{ transform: `translateX(-${idx * cardWidth}px)` }}
-                        variants={containerVariants}
-                        initial="hidden"
-                        whileInView={introDone ? "visible" : "hidden"}
-                        viewport={{ once: false, amount: 0.2 }}
-                    >
-                        {services.map((svc) => (
-                            <motion.div 
-                                key={svc.id}
-                                className="svc-card" 
-                                variants={cardVariants}
-                                whileHover={{ scale: 1.02 }}
-                                style={{ 
-                                    background: `linear-gradient(to bottom, ${svc.gradient}), url('/${svc.bgImg}')`, 
-                                    backgroundSize: 'cover', 
-                                    backgroundPosition: svc.bgPos,
-                                }}
+                <div className="carousel-inner">
+                    {/* Left: Text */}
+                    <div className="carousel-content">
+                        <div className="carousel-content-inner">
+                            {/* Collection number */}
+                            <div className={`carousel-collection-num ${isTransitioning ? 'transitioning' : 'visible'}`}>
+                                <span className="carousel-num-line" />
+                                <span className="carousel-num-text">
+                                    {String(currentIndex + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}
+                                </span>
+                            </div>
+
+                            {/* Title */}
+                            <h2 className={`carousel-title ${isTransitioning ? 'transitioning' : 'visible'}`}>
+                                <EditableText path={`services.items.${currentIndex}.title`} tag="span" />
+                            </h2>
+
+                            {/* Subtitle */}
+                            <p
+                                className={`carousel-subtitle ${isTransitioning ? 'transitioning' : 'visible'}`}
                             >
-                                <div className="svc-top">
-                                    <span className="svc-num">( 00{svc.id} )</span>
-                                    <i className={`fa-solid ${svc.icon} svc-ico`}></i>
+                                Servicio Inmobiliario · Mexicali
+                            </p>
+
+                            {/* Description */}
+                            <p className={`carousel-description ${isTransitioning ? 'transitioning' : 'visible'}`}>
+                                <EditableText path={`services.items.${currentIndex}.desc`} tag="span" />
+                            </p>
+
+                            {/* Navigation */}
+                            <div className="carousel-nav-arrows">
+                                <button onClick={goPrev} className="carousel-arrow-btn" aria-label="Anterior">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                                        <path d="M19 12H5M12 19l-7-7 7-7" />
+                                    </svg>
+                                </button>
+                                <button onClick={goNext} className="carousel-arrow-btn" aria-label="Siguiente">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                                        <path d="M5 12h14M12 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Right: Image */}
+                    <div className="carousel-image-container">
+                        <div className={`carousel-image-frame ${isTransitioning ? 'transitioning' : 'visible'}`}>
+                            <img
+                                src={currentSlide.bgImg}
+                                alt={currentSlide.title}
+                                className="carousel-image"
+                            />
+                            <div
+                                className="carousel-image-overlay"
+                                style={{ background: `linear-gradient(135deg, ${accent}33 0%, transparent 50%)` }}
+                            />
+                            {/* Admin: change image */}
+                            {isAdmin && (
+                                <div
+                                    className="carousel-image-edit admin-editable admin-editable-img"
+                                    onClick={handleBgEdit}
+                                    onMouseDown={(e) => e.stopPropagation()}
+                                    onPointerDown={(e) => e.stopPropagation()}
+                                >
+                                    <div className="admin-img-overlay">
+                                        <i className="fa-solid fa-image" />
+                                        <span>Cambiar</span>
+                                    </div>
                                 </div>
-                                <div className="svc-bot">
-                                    <h3 className="svc-name">{svc.title}</h3>
-                                    <p className="svc-txt">{svc.desc}</p>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </motion.div>
+                            )}
+                        </div>
+
+                        {/* Decorative corners */}
+                        <div className="carousel-frame-corner carousel-frame-corner--tl" style={{ borderColor: accent }} />
+                        <div className="carousel-frame-corner carousel-frame-corner--br" style={{ borderColor: accent }} />
+                    </div>
                 </div>
 
-                <button className="svc-arrow svc-arrow--next" onClick={slideRight} disabled={idx >= maxIdx} aria-label="Siguiente">
-                    <i className="fa-solid fa-chevron-right"></i>
-                </button>
+                {/* Progress indicators */}
+                <div className="carousel-progress-bar">
+                    {slides.map((slide, index) => (
+                        <button
+                            key={index}
+                            onClick={() => goToSlide(index)}
+                            className={`carousel-progress-item ${index === currentIndex ? 'active' : ''}`}
+                            aria-label={`Ir a servicio ${index + 1}`}
+                        >
+                            <div className="carousel-progress-track">
+                                <div
+                                    className="carousel-progress-fill"
+                                    style={{
+                                        width: index === currentIndex ? `${progress}%` : index < currentIndex ? '100%' : '0%',
+                                        backgroundColor: index === currentIndex ? accent : undefined,
+                                    }}
+                                />
+                            </div>
+                            <span className="carousel-progress-label">{slide.title}</span>
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* Process steps */}
+            <div className="container">
+                <motion.div
+                    className="svc-process"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={introDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                    viewport={{ once: false, amount: 0.3 }}
+                    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+                >
+                    <h3 className="svc-process-title">Nuestro Proceso</h3>
+                    <div className="svc-steps">
+                        {s.process.map((step, i) => (
+                            <div key={step.num} className="svc-step-wrapper">
+                                {i > 0 && <div className="svc-step-line" />}
+                                <div className="svc-step">
+                                    <motion.span className="svc-step-num" animate={stepPulse} transition={{ duration: 3 + i * 0.5, repeat: Infinity, ease: 'easeInOut' }}>
+                                        {step.num}
+                                    </motion.span>
+                                    <EditableText path={`services.process.${i}.title`} tag="h4" />
+                                    <EditableText path={`services.process.${i}.desc`} tag="p" />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </motion.div>
             </div>
         </section>
     );

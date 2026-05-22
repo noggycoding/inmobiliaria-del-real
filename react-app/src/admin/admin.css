@@ -1,0 +1,898 @@
+/* ── Admin System Styles ─────────────────────────── */
+
+/* Editable elements highlight */
+.admin-editable {
+  position: relative;
+  cursor: pointer !important;
+  transition: outline 0.2s ease, background-color 0.2s ease;
+  border-radius: 4px;
+}
+
+.admin-editable:hover {
+  outline: 2px dashed rgba(217, 176, 71, 0.7);
+  outline-offset: 4px;
+  background-color: rgba(217, 176, 71, 0.05);
+}
+
+.admin-editable::after {
+  content: '✎';
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
+  background: var(--color-gold-base);
+  color: #fff;
+  font-size: 10px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.admin-editable:hover::after {
+  opacity: 1;
+}
+
+/* Image overlay */
+.admin-editable-img {
+  cursor: pointer !important;
+}
+
+.admin-img-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+  z-index: 10;
+  border-radius: inherit;
+}
+
+.admin-editable-img:hover .admin-img-overlay {
+  opacity: 1;
+}
+
+.admin-img-overlay i {
+  font-size: 1.8rem;
+  color: var(--color-gold-light);
+}
+
+.admin-img-overlay span {
+  font-size: 0.75rem;
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.admin-img-wrap {
+  display: contents;
+}
+
+.admin-editable-img.admin-img-wrap {
+  display: block;
+  position: relative;
+}
+
+/* ── Toolbar ───────────────────────────────────── */
+.admin-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: #1a1a2e;
+  border-bottom: 1px solid rgba(217, 176, 71, 0.3);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  gap: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.admin-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.admin-toolbar-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.35rem 0.9rem;
+  background: rgba(217, 176, 71, 0.15);
+  border: 1px solid rgba(217, 176, 71, 0.4);
+  border-radius: 20px;
+  color: var(--color-gold-light);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.admin-toolbar-badge i {
+  font-size: 0.8rem;
+}
+
+.admin-toolbar-hint {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.admin-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-tb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.72rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-tb-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(217, 176, 71, 0.4);
+  color: #fff;
+}
+
+.admin-tb-btn-danger {
+  border-color: rgba(239, 68, 68, 0.3);
+  color: rgba(239, 68, 68, 0.8);
+}
+
+.admin-tb-btn-danger:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.6);
+  color: #ef4444;
+}
+
+.admin-tb-btn-exit {
+  border-color: rgba(37, 211, 102, 0.3);
+  color: rgba(37, 211, 102, 0.9);
+}
+
+.admin-tb-btn-exit:hover {
+  background: rgba(37, 211, 102, 0.12);
+  border-color: rgba(37, 211, 102, 0.6);
+  color: #25d366;
+}
+
+.admin-toolbar-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 0 0.3rem;
+}
+
+.admin-saved-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #25d366;
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  background: rgba(37, 211, 102, 0.12);
+  animation: savedPop 0.3s ease;
+}
+
+@keyframes savedPop {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.admin-btn-label {
+  display: inline;
+}
+
+/* Property card image in admin editable */
+.property-card .admin-editable-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.property-card .admin-editable-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* About author image wrapper */
+.about-author-box .admin-editable-img {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.about-author-box .admin-editable-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 2px solid var(--color-gold-base);
+  border-radius: 50%;
+}
+
+/* Testimonial card author img */
+.testi-card-author .admin-editable-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.testi-card-author .admin-editable-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 2px solid var(--color-gold-base);
+  border-radius: 50%;
+}
+
+/* Diamond item admin editable */
+.diamond-item .admin-editable-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.diamond-item .admin-editable-img img {
+  width: 150%;
+  height: 150%;
+  object-fit: cover;
+  transform: rotate(-45deg) scale(1.3) translate(-10%, -10%);
+}
+
+/* Navbar logo admin */
+.logo .admin-editable-img {
+  display: flex;
+}
+
+.logo .admin-editable-img img {
+  height: 56px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* When admin toolbar is visible, offset navbar */
+body.admin-mode {
+  padding-top: 48px;
+}
+
+body.admin-mode .navbar {
+  top: 48px;
+}
+
+/* Disable pointer on all non-editable interactive elements in admin */
+body.admin-mode a:not(.admin-editable):not(.admin-tb-btn):not(.editor-btn),
+body.admin-mode button:not(.admin-editable):not(.admin-tb-btn):not(.editor-btn):not(.editor-modal-close):not(.editor-upload-btn):not(.svc-arrow) {
+  cursor: not-allowed !important;
+  opacity: 0.6;
+  position: relative;
+}
+
+/* But keep editables looking normal */
+body.admin-mode .admin-editable {
+  cursor: pointer !important;
+  opacity: 1 !important;
+}
+
+/* Svc arrows still work for navigation in editor */
+body.admin-mode .svc-arrow {
+  cursor: pointer !important;
+  opacity: 1 !important;
+}
+
+/* Hide highlights mode */
+body.admin-hide-highlights .admin-editable:hover {
+  outline: none;
+  background-color: transparent;
+}
+
+body.admin-hide-highlights .admin-editable::after {
+  display: none;
+}
+
+body.admin-hide-highlights .admin-img-overlay {
+  opacity: 0 !important;
+}
+
+body.admin-hide-highlights .svc-card-img-edit {
+  opacity: 0 !important;
+}
+
+/* Hero background edit button */
+.hero-bg-edit {
+  position: absolute;
+  bottom: 6rem;
+  left: 2rem;
+  display: flex;
+  align-items: center;
+  z-index: 10;
+  cursor: pointer !important;
+  width: auto;
+  height: auto;
+}
+
+.hero-bg-edit .admin-img-overlay {
+  position: relative;
+  inset: auto;
+  opacity: 1;
+  border-radius: 10px;
+  width: auto;
+  height: auto;
+  padding: 0.55rem 1.1rem;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px dashed rgba(217, 176, 71, 0.6);
+  flex-direction: row;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.hero-bg-edit .admin-img-overlay i {
+  font-size: 0.95rem;
+}
+
+.hero-bg-edit .admin-img-overlay span {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+}
+
+.hero-bg-edit:hover .admin-img-overlay {
+  background: rgba(217, 176, 71, 0.18);
+  border-color: var(--color-gold-light);
+}
+
+/* Service card bg image edit zone */
+.svc-card-img-edit {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  z-index: 20;
+  cursor: pointer !important;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.svc-card-img-edit:hover {
+  opacity: 1 !important;
+}
+
+.svc-card-img-edit .admin-img-overlay {
+  border-radius: 12px;
+  opacity: 1;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  gap: 2px;
+}
+
+.svc-card-img-edit .admin-img-overlay i {
+  font-size: 1rem;
+}
+
+.svc-card-img-edit .admin-img-overlay span {
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+}
+
+/* Nav dropdown */
+.admin-nav-wrapper {
+  position: relative;
+}
+
+.admin-tb-btn-nav {
+  gap: 5px;
+}
+
+.admin-nav-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  background: #1a1a2e;
+  border: 1px solid rgba(217, 176, 71, 0.3);
+  border-radius: 10px;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  z-index: 10002;
+  min-width: 160px;
+  animation: modalSlideUp 0.2s ease;
+}
+
+.admin-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.55rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.75);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.admin-nav-item:hover {
+  background: rgba(217, 176, 71, 0.12);
+  color: var(--color-gold-light);
+}
+
+.admin-nav-item i {
+  width: 16px;
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--color-gold-base);
+}
+
+/* Toggle button off state */
+.admin-tb-btn-off {
+  opacity: 0.5;
+}
+
+/* Panel button active */
+.admin-tb-btn-panel.active {
+  background: rgba(217, 176, 71, 0.15);
+  border-color: rgba(217, 176, 71, 0.5);
+  color: var(--color-gold-light);
+}
+
+/* Full Admin Panel button */
+.admin-tb-btn-full {
+  background: rgba(217, 176, 71, 0.1) !important;
+  border-color: rgba(217, 176, 71, 0.4) !important;
+  color: var(--color-gold-light) !important;
+}
+
+.admin-tb-btn-full:hover {
+  background: rgba(217, 176, 71, 0.2) !important;
+  border-color: var(--color-gold-light) !important;
+}
+
+/* ── Mini Admin Panel ──────────────────────────── */
+.admin-panel {
+  position: fixed;
+  top: 48px;
+  right: 0;
+  width: 340px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  background: #12122a;
+  border-left: 1px solid rgba(217, 176, 71, 0.2);
+  border-bottom: 1px solid rgba(217, 176, 71, 0.2);
+  box-shadow: -8px 8px 32px rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  animation: panelSlideIn 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  border-bottom-left-radius: 16px;
+}
+
+@keyframes panelSlideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.admin-panel-inner {
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.admin-panel-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.admin-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.admin-panel-title i {
+  color: var(--color-gold-base);
+  font-size: 0.8rem;
+}
+
+/* Panel grid buttons */
+.admin-panel-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.admin-panel-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 1rem 0.8rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.admin-panel-btn:hover {
+  background: rgba(217, 176, 71, 0.08);
+  border-color: rgba(217, 176, 71, 0.35);
+}
+
+.admin-panel-btn i {
+  font-size: 1.2rem;
+  color: var(--color-gold-light);
+  margin-bottom: 2px;
+}
+
+.admin-panel-btn span {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.admin-panel-btn small {
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.admin-panel-btn-danger {
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.admin-panel-btn-danger:hover {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.admin-panel-btn-danger i {
+  color: #ef4444;
+}
+
+/* Info rows */
+.admin-panel-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.admin-panel-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.8rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.admin-panel-info-row span {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.admin-panel-info-row strong {
+  font-size: 0.78rem;
+  color: var(--color-gold-light);
+  font-weight: 600;
+}
+
+/* Tips */
+.admin-panel-tips {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.admin-panel-tips li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0.4rem 0;
+}
+
+.admin-panel-tips li i {
+  width: 14px;
+  color: rgba(217, 176, 71, 0.7);
+  font-size: 0.68rem;
+  flex-shrink: 0;
+}
+
+/* ── Editor Modal ──────────────────────────────── */
+.editor-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: modalFadeIn 0.2s ease;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.editor-modal {
+  width: 100%;
+  max-width: 520px;
+  background: #1a1a2e;
+  border: 1px solid rgba(217, 176, 71, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.6);
+  animation: modalSlideUp 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+}
+
+@keyframes modalSlideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.editor-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.4rem 1.6rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.editor-modal-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.editor-modal-path {
+  font-size: 0.68rem;
+  color: rgba(217, 176, 71, 0.7);
+  font-family: monospace;
+}
+
+.editor-modal-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.editor-modal-close:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+}
+
+.editor-modal-body {
+  padding: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.editor-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.editor-input,
+.editor-textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  font-size: 0.92rem;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+  outline: none;
+}
+
+.editor-input:focus,
+.editor-textarea:focus {
+  border-color: var(--color-gold-base);
+  box-shadow: 0 0 0 3px rgba(217, 176, 71, 0.15);
+}
+
+.editor-textarea {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.6;
+}
+
+.editor-hint {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* Image editor */
+.editor-img-preview {
+  width: 100%;
+  height: 180px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.editor-img-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.editor-img-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.editor-img-empty i {
+  font-size: 2rem;
+}
+
+.editor-upload-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0.9rem;
+  border-radius: 8px;
+  border: 2px dashed rgba(217, 176, 71, 0.35);
+  background: rgba(217, 176, 71, 0.04);
+  color: var(--color-gold-light);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.editor-upload-btn:hover {
+  border-color: var(--color-gold-light);
+  background: rgba(217, 176, 71, 0.1);
+}
+
+.editor-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.72rem;
+}
+
+.editor-divider::before,
+.editor-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Footer */
+.editor-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  padding: 1.2rem 1.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.editor-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.7rem 1.4rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.editor-btn-cancel {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.editor-btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.editor-btn-save {
+  background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold-dark));
+  color: #0b1a2c;
+}
+
+.editor-btn-save:hover {
+  box-shadow: 0 8px 20px -6px rgba(217, 176, 71, 0.5);
+  transform: translateY(-1px);
+}
+
+/* ── Responsive ────────────────────────────────── */
+@media (max-width: 768px) {
+  .admin-toolbar {
+    height: auto;
+    flex-direction: column;
+    padding: 0.6rem 1rem;
+    gap: 0.5rem;
+  }
+
+  .admin-toolbar-hint { display: none; }
+  .admin-toolbar-actions { flex-wrap: wrap; }
+
+  body.admin-mode { padding-top: 80px; }
+  body.admin-mode .navbar { top: 80px; }
+
+  .editor-modal { max-width: 100%; }
+}
